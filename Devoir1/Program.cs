@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Devoir1
 {
+
     class Program
     {
         static void Main(string[] args)
@@ -17,7 +18,9 @@ namespace Devoir1
             }
 
             Liste<int> rlst = new Liste<int>(lst);
+            Console.WriteLine(lst == rlst);
             rlst.inverser();
+            Console.WriteLine(lst == rlst);
             rlst.ajouter(77);
             lst.ajouter(88);
 

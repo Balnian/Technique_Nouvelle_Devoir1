@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,24 +10,24 @@ namespace Devoir1
 {
     class Liste<T> where T : new()
     {
-        class Noeud<U> where U : T, new()
+        class Noeud
         {
-            public Noeud<U> succ;
+            public Noeud succ;
 
-            public U Val;
+            public T Val;
 
             public Noeud()
             {
-                Val = new U();
+                Val = new T();
                 succ = null;
             }
 
-            public Noeud(U val)
+            public Noeud(T val)
             {
                 Val = val;
                 succ = null;
             }
-            public Noeud(Noeud<U> no)
+            public Noeud(Noeud no)
             {
 
                 Val = no.Val;
@@ -36,10 +38,14 @@ namespace Devoir1
             }
 
 
+
+
+
+
         }
 
-        private Noeud<T> tete;
-        private Noeud<T> dernier;
+        private Noeud tete;
+        private Noeud dernier;
 
         public Liste()
         {
@@ -49,7 +55,7 @@ namespace Devoir1
 
         public Liste(Liste<T> autre)
         {
-            Noeud<T> temp = autre.tete;
+            Noeud temp = autre.tete;
             do
             {
                 ajouter(temp.Val);
@@ -65,11 +71,11 @@ namespace Devoir1
         {
             if (est_vide())
             {
-                tete = dernier = new Noeud<T>(val);
+                tete = dernier = new Noeud(val);
             }
             else
             {
-                dernier.succ = new Noeud<T>(val);
+                dernier.succ = new Noeud(val);
                 dernier = dernier.succ;
             }
         }
@@ -77,7 +83,7 @@ namespace Devoir1
         public T extraire()
         {
             if (est_vide()) throw new Exception("Vide");
-            Noeud<T> temp = tete;
+            Noeud temp = tete;
             tete = tete.succ;
             return temp.Val;
         }
@@ -87,7 +93,7 @@ namespace Devoir1
             get
             {
                 int n = 0;
-                for (Noeud<T> i = tete; i != null; i = i.succ)
+                for (Noeud i = tete; i != null; i = i.succ)
                 {
                     n++;
                 }
@@ -97,21 +103,94 @@ namespace Devoir1
 
         public void inverser()
         {
-            Noeud<T> nouvelleTete = new Noeud<T>(tete.Val);
-            Noeud<T> parcour = tete;
+            Noeud nouvelleTete = new Noeud(tete.Val);
+            Noeud parcour = tete;
             //dernier = nouvelleTete;
             while ((parcour = parcour.succ) != null)
             {
-                Noeud<T> temp = new Noeud<T>(nouvelleTete);
-                nouvelleTete = new Noeud<T>(parcour.Val);
-                nouvelleTete.succ = new Noeud<T>(temp);
+                Noeud temp = new Noeud(nouvelleTete);
+                nouvelleTete = new Noeud(parcour.Val);
+                nouvelleTete.succ = new Noeud(temp);
             }
 
-            tete = new Noeud<T>(nouvelleTete);
-            for (Noeud<T> i = tete; i != null; i = i.succ)
+            tete = new Noeud(nouvelleTete);
+            for (Noeud i = tete; i != null; i = i.succ)
             {
                 dernier = i;
             }
         }
+
+        public void Vider()
+        {
+            tete = null;
+            dernier = null;
+        }
+
+        public void Afficher(TextWriter strm)
+        {
+
+            for (Noeud i = tete; i != null; i = i.succ)
+            {
+                strm.Write(i.Val);
+            }
+
+        }
+
+        public override bool Equals(System.Object obj)
+        {
+            // If parameter is null return false.
+            if (obj == null)
+            {
+                return false;
+            }
+
+            // If parameter cannot be cast to Point return false.
+            Liste<T> p = obj as Liste<T>;
+            if ((System.Object)p == null)
+            {
+                return false;
+            }
+
+            // Return true if the fields match:
+            return Equals(p);
+        }
+
+        public bool Equals(Liste<T> p)
+        {
+            // If parameter is null return false:
+            if ((object)p == null)
+            {
+                return false;
+            }
+
+            if (p.taille != taille)
+                return false;
+            else
+            {
+                Noeud a = tete;
+                Noeud b = p.tete;
+                do
+                {
+                    if (!a.Val.Equals(b.Val))
+                        return false;
+                } while ((a = a.succ) != null && (b = b.succ) != null);
+                return true;
+            }
+
+
+        }
+
+        public static bool operator ==(Liste<T> a, Liste<T> b)
+        {
+            return a.Equals(b);
+        }
+        public static bool operator !=(Liste<T> a, Liste<T> b)
+        {
+            return !(a == b);
+        }
+
+
+
+
     }
 }
