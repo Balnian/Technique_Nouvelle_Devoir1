@@ -18,10 +18,29 @@ namespace Devoir1
 
             Liste<int> rlst = new Liste<int>(lst);
             rlst.inverser();
-            for (int i = 0; i < 10; i++)
+            rlst.ajouter(77);
+            lst.ajouter(88);
+
+            try
             {
-                Console.Write(rlst.extraire());
+                
+                for (int i = rlst.taille; i > 0 ; i--)
+                {
+                    Console.Write(rlst.extraire());
+                }
+                Console.WriteLine("");
+                for (int i = lst.taille; i > 0; i--)
+                {
+                    Console.Write(lst.extraire());
+                }
+                Console.WriteLine("");
             }
+            catch (Exception)
+            {
+
+                
+            }
+            
         }
     }
 }

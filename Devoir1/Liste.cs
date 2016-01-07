@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Devoir1
 {
-    class Liste<T> where T :new()
+    class Liste<T> where T : new()
     {
-        class Noeud<U> where U :T, new()
+        class Noeud<U> where U : T, new()
         {
             public Noeud<U> succ;
 
@@ -25,6 +25,15 @@ namespace Devoir1
                 Val = val;
                 succ = null;
             }
+            public Noeud(Noeud<U> no)
+            {
+
+                Val = no.Val;
+                if (no.Val != null)
+                    succ = no.succ;
+                else
+                    succ = null;
+            }
 
 
         }
@@ -38,9 +47,13 @@ namespace Devoir1
             dernier = null;
         }
 
-        public Liste(Liste<T> autre )
+        public Liste(Liste<T> autre)
         {
-
+            Noeud<T> temp = autre.tete;
+            do
+            {
+                ajouter(temp.Val);
+            } while ((temp = temp.succ) != null);
         }
 
         public bool est_vide()
@@ -50,7 +63,7 @@ namespace Devoir1
 
         public void ajouter(T val)
         {
-            if(est_vide())
+            if (est_vide())
             {
                 tete = dernier = new Noeud<T>(val);
             }
@@ -67,29 +80,38 @@ namespace Devoir1
             Noeud<T> temp = tete;
             tete = tete.succ;
             return temp.Val;
-        } 
+        }
 
-        public int taille()
+        public int taille
         {
-            int n = 0;
-            for (Noeud<T> i = tete; i != null; i = i.succ)
+            get
             {
-                n++;
+                int n = 0;
+                for (Noeud<T> i = tete; i != null; i = i.succ)
+                {
+                    n++;
+                }
+                return n;
             }
-            return n;
         }
 
         public void inverser()
         {
-            Noeud<T> nouvelleTete=new Noeud<T>();
-            while(tete!=null)
+            Noeud<T> nouvelleTete = new Noeud<T>(tete.Val);
+            Noeud<T> parcour = tete;
+            //dernier = nouvelleTete;
+            while ((parcour = parcour.succ) != null)
             {
-                Noeud<T> temp = new Noeud<T>(tete.Val);
-                temp.succ = nouvelleTete;
-                temp = tete;
-                tete = temp.succ;
+                Noeud<T> temp = new Noeud<T>(nouvelleTete);
+                nouvelleTete = new Noeud<T>(parcour.Val);
+                nouvelleTete.succ = new Noeud<T>(temp);
             }
-            tete = nouvelleTete;
+
+            tete = new Noeud<T>(nouvelleTete);
+            for (Noeud<T> i = tete; i != null; i = i.succ)
+            {
+                dernier = i;
+            }
         }
     }
 }
